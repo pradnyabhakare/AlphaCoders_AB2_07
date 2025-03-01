@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Important Contacts</title>
+    <link rel="stylesheet" href="output.css">
+</head>
+<body class="bg-gray-100 h-screen flex flex-col">
+
+    <!-- Sticky Navigation Bar -->
+    <nav class="bg-red-500 text-white p-4 fixed top-0 w-full shadow-md flex justify-between items-center z-10">
+        <h1 class="text-xl font-bold">Important Contacts</h1>
+        <div class="flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" class="w-7 h-7 fill-white cursor-pointer">
+                <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
+            </svg>
+        </div>
+    </nav>
+
+    <!-- Scrollable Contacts List -->
+    <div class="pt-20 px-6 overflow-y-auto h-full w-full">
+        <div class="w-full p-6 bg-white rounded-lg shadow-md">
+            <input type="text" id="search" placeholder="Search contacts..." 
+                   class="w-full p-2 border border-gray-300 rounded mb-4 focus:outline-none focus:ring-2 focus:ring-red-500">
+
+            <div class="max-h-[75vh] overflow-y-auto border border-gray-300 p-2 rounded w-full">
+                <ul id="contactsList" class="space-y-3"></ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="contacts.js"></script>
+</body>
+</html>

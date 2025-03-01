@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Bank List</title>
+    <link rel="stylesheet" href="output.css">
+</head>
+<body class="bg-gray-100">
+
+    <nav class="bg-red-500 text-white p-4 fixed top-0 w-full shadow-md flex justify-between items-center">
+        <h1 class="text-xl font-bold">Available Blood Banks</h1>
+        <div class="flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" class="w-7 h-7 fill-white cursor-pointer">
+                <path d="M120-240v-80h720v80H120Zm0-200v-80h720v80H120Zm0-200v-80h720v80H120Z" />
+            </svg>
+        </div>
+    </nav>
+
+    <div class="mt-20 max-w-4xl mx-auto p-6">
+        <h2 class="text-2xl font-bold text-red-500 mb-4">Blood Bank List</h2>
+        <div id="blood-bank-list"></div>
+    </div>
+
+    <script src="blood_banks_data.js"></script>
+</body>
+</html>
