@@ -1,102 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% load static %}
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Request for Blood</title>
-    <link rel="stylesheet" href="static/css/output.css">
+    {% comment %} <link rel="stylesheet" href="static/css/output.css" /> {% endcomment %}
+    <link rel="stylesheet" href="{% static 'css/output.css'%}" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-</head>
-<body class="bg-gray-100">
+  </head>
+  <body class="bg-gray-100">
     <!-- Sticky Navbar -->
     <nav class="bg-red-500 text-white p-4 fixed top-0 w-full shadow-md flex justify-between items-center">
-        <h1 class="text-xl font-bold">Request for Blood</h1>
+      <h1 class="text-xl font-bold">Request for Blood</h1>
     </nav>
 
     <!-- Main Content -->
     <div class="mt-20 max-w-lg mx-auto p-6 bg-white rounded-lg shadow-md overflow-y-auto">
-        <p class="text-sm text-gray-600 mb-2">(Kindly fill the details correctly to help you better)</p>
-        <form id="bloodRequestForm" class="space-y-4">
-            <select id="bloodType" class="w-full border-b p-2" required>
-                <option value="" disabled selected>Select Blood Type</option>
-                <option value="A+">A+</option>
-                <option value="B+">B+</option>
-                <option value="O+">O+</option>
-                <option value="AB+">AB+</option>
-                <option value="A-">A-</option>
-                <option value="B-">B-</option>
-                <option value="O-">O-</option>
-                <option value="AB-">AB-</option>
-            </select>
-            <input type="text" id="name" placeholder="Patient First Name" class="w-full border-b p-2" required>
-            <input type="tel" id="mobile" placeholder="Attendee Mobile Number" class="w-full border-b p-2" required>
-            <input type="date" id="date" class="w-full border-b p-2" required>
-            <input type="number" id="quantity" placeholder="Select Units" class="w-full border-b p-2" required>
-            
-            <label class="block text-gray-700">Select Location</label>
-            <button type="button" id="chooseLocationBtn" class="w-full text-left border-b p-2">📍 Choose My Location</button>
-            <input type="text" id="selectedLocation" placeholder="Selected location" class="w-full border-b p-2" readonly>
-            <div id="map" class="w-full h-64 mt-2"></div>
-            
-            <label class="flex items-center justify-between">
-                <span class="text-gray-700">Critical</span>
-                <input type="checkbox" id="critical" class="toggle-checkbox">
-            </label>
-            <button type="submit" class="w-full bg-red-500 text-white py-2 rounded-md font-bold mt-6">Request Blood</button>
-        </form>
+      <p class="text-sm text-gray-600 mb-2">(Kindly fill the details correctly to help you better)</p>
+      <form id="bloodRequestForm" class="space-y-4" action="{% url '/request' %}" method="post">
+        {% csrf_token %}
+        <select name="blood_type" id="bloodType" class="w-full border-b p-2" required>
+          <option value="" disabled selected>Select Blood Type</option>
+          <option value="A+">A+</option>
+          <option value="B+">B+</option>
+          <option value="O+">O+</option>
+          <option value="AB+">AB+</option>
+          <option value="A-">A-</option>
+          <option value="B-">B-</option>
+          <option value="O-">O-</option>
+          <option value="AB-">AB-</option>
+        </select>
+        <input name="name" type="text" id="name" placeholder="Patient First Name" class="w-full border-b p-2" required />
+        <input name="contact" type="tel" id="mobile" placeholder="Attendee Mobile Number" class="w-full border-b p-2" required />
+        <input name="date" type="date" id="date" class="w-full border-b p-2" required />
+        <input name="unit" type="number" id="quantity" placeholder="Select Units" class="w-full border-b p-2" required />
+
+        <label class="block text-gray-700">Select Location</label>
+        <button type="button" id="chooseLocationBtn" class="w-full text-left border-b p-2">📍 Choose My Location</button>
+        <input name="location" type="text" id="selectedLocation" placeholder="Selected location" class="w-full border-b p-2" />
+        <div id="map" class="w-full h-64 mt-2"></div>
+
+        <label class="flex items-center justify-between">
+          <span class="text-gray-700">Critical</span>
+          <input name="case" type="checkbox" id="critical" class="toggle-checkbox" />
+        </label>
+        <button type="submit" class="w-full bg-red-500 text-white py-2 rounded-md font-bold mt-6">Request Blood</button>
+      </form>
+    </div>
+
+    <!-- Ham Menue -->
+    <div class="fixed top-0 right-0 flex h-full w-64 bg-red-100 z-20 hidden" id="ham-menu">
+      <div class="relative h-full w-full">
+        <div class="flex flex-col gap-4 p-4">
+          <div class="flex flex-row gap-2 items-center" onclick="document.getElementById('ham-menu').classList.toggle('hidden');document.getElementById('hamBar').classList.toggle('hidden');">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000" class="mt-2">
+              <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+            </svg>
+          </div>
+
+          <div class="flex flex-row gap-2 items-center mt-4">
+            <div class="w-8 h-8 bg-white flex justify-center items-center rounded-full">
+              <img src="{% static 'imgs/user.png' %}" class="w-6 h-6 rounded-full object-cover" />
+            </div>
+            <span class="text-lg font-bold">User Profile</span>
+          </div>
+          <hr class="border-t-[0.025rem] border-black w-full" />
+          <div class="flex flex-row gap-2 items-center" onclick="window.location.href = '{% url 'dashboard' %}'">
+            <div class="w-8 h-8 bg-white flex justify-center items-center rounded-full">
+              <img src="{% static 'imgs/home.png' %}" class="w-6 h-6 rounded-full object-cover" />
+            </div>
+            <span class="text-lg font-bold">Home</span>
+          </div>
+          <hr class="border-t-[0.025rem] border-black w-full" />
+          <div class="flex flex-row gap-2 items-center">
+            <div class="w-8 h-8 bg-white flex justify-center items-center rounded-full">
+              <img src="{% static 'imgs/notification.png' %}" class="w-6 h-6 rounded-full object-cover" />
+            </div>
+            <span class="text-lg font-bold">Notifications</span>
+          </div>
+          <hr class="border-t-[0.025rem] border-black w-full" />
+          <div class="flex flex-row gap-2 items-center">
+            <div class="w-8 h-8 bg-white flex justify-center items-center rounded-full">
+              <img src="{% static 'imgs/chat.png' %}" class="w-6 h-6 rounded-full object-contain" />
+            </div>
+            <span class="text-lg font-bold">Chat With AI</span>
+          </div>
+          <hr class="border-t-[0.025rem] border-black w-full" />
+          <div class="flex flex-row gap-2 items-center">
+            <div class="w-8 h-8 bg-white flex justify-center items-center rounded-full">
+              <img src="{% static 'imgs/contact.png' %}" class="w-6 h-6 rounded-full object-cover" />
+            </div>
+            <span class="text-lg font-bold">Important Contacts</span>
+          </div>
+          <hr class="border-t-[0.025rem] border-black w-full" />
+          <div class="flex flex-row gap-2 items-center">
+            <div class="w-8 h-8 bg-white flex justify-center items-center rounded-full">
+              <img src="{% static 'imgs/about.png' %}" class="w-6 h-6 rounded-full object-cover" />
+            </div>
+            <span class="text-lg font-bold">About us</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ham Bar -->
+    <div id="hamBar" class="fixed top-2.5 right-2.5 flex w-10 h-10 z-20 p-1" onclick="document.getElementById('ham-menu').classList.toggle('hidden'); this.classList.toggle('hidden')">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" class="w-full h-full" fill="#fff">
+        <path d="M140-254.62v-59.99h680v59.99H140ZM140-450v-60h680v60H140Zm0-195.39v-59.99h680v59.99H140Z" />
+      </svg>
     </div>
 
     <script>
-        let selectedCoords = null;
-        let map = null; 
-        let marker = null;
-
-        document.getElementById("chooseLocationBtn").addEventListener("click", openLocationPicker);
-
-        function openLocationPicker() {
-            if (navigator.geolocation) {
-                navigator.geolocation.getCurrentPosition(position => {
-                    selectedCoords = [position.coords.latitude, position.coords.longitude];
-                    document.getElementById('selectedLocation').value = `Lat: ${selectedCoords[0]}, Lng: ${selectedCoords[1]}`;
-                    initLeafletMap(selectedCoords);
-                }, error => {
-                    alert("Location access denied. Please select manually.");
-                    initLeafletMap();
-                });
-            } else {
-                alert("Geolocation is not supported by this browser.");
+      let selectedCoords = null
+      let map = null
+      let marker = null
+      
+      document.getElementById('chooseLocationBtn').addEventListener('click', openLocationPicker)
+      
+      function openLocationPicker() {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              selectedCoords = [position.coords.latitude, position.coords.longitude]
+              document.getElementById('selectedLocation').value = `Lat: ${selectedCoords[0]}, Lng: ${selectedCoords[1]}`
+              initLeafletMap(selectedCoords)
+            },
+            (error) => {
+              alert('Location access denied. Please select manually.')
+              initLeafletMap()
             }
+          )
+        } else {
+          alert('Geolocation is not supported by this browser.')
         }
-
-        function initLeafletMap(coords = [19.0760, 72.8777]) {
-            if (!map) {
-                map = L.map('map').setView(coords, 14);
-                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                    attribution: '&copy; OpenStreetMap contributors'
-                }).addTo(map);
-
-                // Add marker and allow dragging
-                marker = L.marker(coords, { draggable: true }).addTo(map);
-                marker.on('dragend', updateLocationField);
-            } else {
-                map.setView(coords, 14);
-                marker.setLatLng(coords);
-            }
-
-            // Update location when marker is dragged
-            function updateLocationField(e) {
-                selectedCoords = [e.target.getLatLng().lat, e.target.getLatLng().lng];
-                document.getElementById('selectedLocation').value = `Lat: ${selectedCoords[0]}, Lng: ${selectedCoords[1]}`;
-            }
-
-            // Allow user to click anywhere on the map to set marker
-            map.on('click', function (e) {
-                marker.setLatLng(e.latlng);
-                selectedCoords = [e.latlng.lat, e.latlng.lng];
-                document.getElementById('selectedLocation').value = `Lat: ${selectedCoords[0]}, Lng: ${selectedCoords[1]}`;
-            });
+      }
+      
+      function initLeafletMap(coords = [19.076, 72.8777]) {
+        if (!map) {
+          map = L.map('map').setView(coords, 14)
+          L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+          }).addTo(map)
+      
+          // Add marker and allow dragging
+          marker = L.marker(coords, { draggable: true }).addTo(map)
+          marker.on('dragend', updateLocationField)
+        } else {
+          map.setView(coords, 14)
+          marker.setLatLng(coords)
         }
+      
+        // Update location when marker is dragged
+        function updateLocationField(e) {
+          selectedCoords = [e.target.getLatLng().lat, e.target.getLatLng().lng]
+          document.getElementById('selectedLocation').value = `Lat: ${selectedCoords[0]}, Lng: ${selectedCoords[1]}`
+        }
+      
+        // Allow user to click anywhere on the map to set marker
+        map.on('click', function (e) {
+          marker.setLatLng(e.latlng)
+          selectedCoords = [e.latlng.lat, e.latlng.lng]
+          document.getElementById('selectedLocation').value = `Lat: ${selectedCoords[0]}, Lng: ${selectedCoords[1]}`
+        })
+      }
     </script>
-</body>
+  </body>
 </html>

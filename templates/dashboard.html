@@ -30,11 +30,16 @@
     <!-- Content Wrapper with Padding to Avoid Overlap -->
     <div class="pt-40 p-3 bg-white w-full h-screen overflow-y-scroll">
       <div class="flex flex-row gap-2 mt-3 flex-wrap justify-between">
-        <div class="bg-red-100 text-white w-28 rounded-lg flex flex-col justify-center items-center p-4 gap-1 cursor-pointer">
-          <img src="{% static 'imgs/requestblood.gif' %}" class="object-cover w-full rounded-lg bg-transparent mix-blend-multiply" />
-          <hr class="border-t-[0.025rem] border-black w-full" />
-          <span class="flex w-full justify-center items-center text-center text-black leading-tight">Request Blood</span>
-        </div>
+        <form action="{% url '/request' %}" method="get">
+          <button type="submit">
+            <div class="bg-red-100 text-white w-28 rounded-lg flex flex-col justify-center items-center p-4 gap-1 cursor-pointer">
+              <img src="{% static 'imgs/requestblood.gif' %}" class="object-cover w-full rounded-lg bg-transparent mix-blend-multiply" />
+              <hr class="border-t-[0.025rem] border-black w-full" />
+              <span class="flex w-full justify-center items-center text-center text-black leading-tight">Request Blood</span>
+            </div>
+          </button>
+        </form>
+
         <div class="bg-red-100 text-white w-28 rounded-lg flex flex-col justify-center items-center p-4 gap-1 cursor-pointer">
           <img src="{% static 'imgs/donate.gif' %}" class="object-cover w-full rounded-lg bg-transparent mix-blend-multiply" />
           <hr class="border-t-[0.025rem] border-black w-full" />
@@ -55,8 +60,7 @@
           <hr class="border-t-[0.025rem] border-black w-full" />
           <span class="flex w-full justify-center items-center text-center text-black leading-tight">Show History</span>
         </div>
-        <form action="{% url '/sos' %}" method="POST">
-          {% csrf_token %}
+        <form action="{% url '/sos' %}" method="get">
           <button>
             <div id="sosButton" class="bg-red-100 text-white w-28 rounded-lg flex flex-col justify-center items-center p-4 gap-1 cursor-pointer">
               <img src="{% static 'imgs/sos.gif' %}" class="object-cover w-full rounded-lg bg-transparent mix-blend-multiply" />
@@ -131,7 +135,36 @@
     </div>
 
     <script>
-      (function(){if(!window.chatbase||window.chatbase("getState")!=="initialized"){window.chatbase=(...arguments)=>{if(!window.chatbase.q){window.chatbase.q=[]}window.chatbase.q.push(arguments)};window.chatbase=new Proxy(window.chatbase,{get(target,prop){if(prop==="q"){return target.q}return(...args)=>target(prop,...args)}})}const onLoad=function(){const script=document.createElement("script");script.src="https://www.chatbase.co/embed.min.js";script.id="oxIV1UTTXmkZ5kqTt-Jfg";script.domain="www.chatbase.co";document.body.appendChild(script)};if(document.readyState==="complete"){onLoad()}else{window.addEventListener("load",onLoad)}})();
-      </script>
+      ;(function () {
+        if (!window.chatbase || window.chatbase('getState') !== 'initialized') {
+          window.chatbase = (...arguments) => {
+            if (!window.chatbase.q) {
+              window.chatbase.q = []
+            }
+            window.chatbase.q.push(arguments)
+          }
+          window.chatbase = new Proxy(window.chatbase, {
+            get(target, prop) {
+              if (prop === 'q') {
+                return target.q
+              }
+              return (...args) => target(prop, ...args)
+            }
+          })
+        }
+        const onLoad = function () {
+          const script = document.createElement('script')
+          script.src = 'https://www.chatbase.co/embed.min.js'
+          script.id = 'oxIV1UTTXmkZ5kqTt-Jfg'
+          script.domain = 'www.chatbase.co'
+          document.body.appendChild(script)
+        }
+        if (document.readyState === 'complete') {
+          onLoad()
+        } else {
+          window.addEventListener('load', onLoad)
+        }
+      })()
+    </script>
   </body>
 </html>

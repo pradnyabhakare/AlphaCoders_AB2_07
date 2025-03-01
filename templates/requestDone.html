@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% load static%}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Registered</title>
+    <link rel="stylesheet" href="{% static 'css/output.css' %}">
+    <script>
+        let countdown = 3;
+        function updateTimer() {
+            document.getElementById('timer').innerText = countdown;
+            if (countdown === 0) {
+                window.location.href = '/user';
+            } else {
+                countdown--;
+                setTimeout(updateTimer, 1000);
+            }
+        }
+        window.onload = updateTimer;
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Request Registered</h1>
+        <p>Redirecting to user page in <span id="timer">3</span> seconds...</p>
+    </div>
+</body>
+</html>

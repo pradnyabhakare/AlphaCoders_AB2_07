@@ -9,29 +9,30 @@
   </head>
   <body class="flex items-center justify-center min-h-screen bg-red-100">
     <div class="p-6 bg-white rounded-lg w-80 text-left">
-      <form id="sosForm" class="mt-4">
+      <form id="sosForm" class="mt-4" action="{% url '/sos' %}" method="post">
+        {% csrf_token %}
         <div class="justify-center items-center flex mb-5">
           <h3 class="font-bold">Emergency SOS Form</h3>
         </div>
         <div class="mb-2">
           <label class="block text-gray-700 text-sm">Name</label>
-          <input type="text" id="name" class="w-full border px-3 py-1 rounded text-sm" required />
+          <input name="name" type="text" id="name" class="w-full border px-3 py-1 rounded text-sm" required />
         </div>
         <div class="mb-2">
           <label class="block text-gray-700 text-sm">Address</label>
-          <input type="text" id="address" class="w-full border px-3 py-1 rounded text-sm" required />
+          <input name="address" type="text" id="address" class="w-full border px-3 py-1 rounded text-sm" required />
         </div>
         <div class="mb-2">
-          <label class="block text-gray-700 text-sm">Phone Number</label>
-          <input type="tel" id="phone" class="w-full border px-3 py-1 rounded text-sm" required />
+          <label  class="block text-gray-700 text-sm">Phone Number</label>
+          <input name="contact" type="tel" id="phone" class="w-full border px-3 py-1 rounded text-sm" required />
         </div>
         <div class="mb-2">
           <label class="block text-gray-700 text-sm">Age</label>
-          <input type="number" id="age" class="w-full border px-3 py-1 rounded text-sm" required />
+          <input name="age" type="number" id="age" class="w-full border px-3 py-1 rounded text-sm" required />
         </div>
         <div class="mb-2">
           <label class="block text-gray-700 text-sm">Blood Group</label>
-          <select id="bloodGroup" class="w-full border px-3 py-1 rounded text-sm" required>
+          <select name="blood_type" id="bloodGroup" class="w-full border px-3 py-1 rounded text-sm" required>
             <option value="A+">A+</option>
             <option value="A-">A-</option>
             <option value="B+">B+</option>
@@ -44,21 +45,13 @@
         </div>
         <div class="mb-2">
           <label class="block text-gray-700 text-sm">Units of Blood Needed in ml</label>
-          <input type="number" id="bloodUnits" class="w-full border px-3 py-1 rounded text-sm" required />
+          <input name="unit" type="number" id="bloodUnits" class="w-full border px-3 py-1 rounded text-sm" required />
         </div>
-        <div class="mb-2">
-          <label class="block text-gray-700 text-sm">Range (km)</label>
-          <select id="range" class="w-full border px-3 py-1 rounded text-sm" required>
-            <option value="">Select Range</option>
-            <option value="5">5 km</option>
-            <option value="10">10 km</option>
-            <option value="20">20 km</option>
-            <option value="50">50 km</option>
-          </select>
-        </div>
+       
         <div class="mb-2">
           <label class="block text-gray-700 text-sm">Live Location</label>
           <p id="location" class="text-sm text-gray-500">Fetching...</p>
+          <input name="location" hidden type="text" id="userLocation">
           <button type="button" class="flex gap-1 py-1 px-2 mt-2 rounded bg-red-500 text-white" onclick="fetchLocation()">
             <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#e8eaed"><path d="M160-160v-80h110l-16-14q-52-46-73-105t-21-119q0-111 66.5-197.5T400-790v84q-72 26-116 88.5T240-478q0 45 17 87.5t53 78.5l10 10v-98h80v240H160Zm400-10v-84q72-26 116-88.5T720-482q0-45-17-87.5T650-648l-10-10v98h-80v-240h240v80H690l16 14q49 49 71.5 106.5T800-482q0 111-66.5 197.5T560-170Z"/></svg>
             Refresh
@@ -67,6 +60,70 @@
         <button disabled id="submit_btn" type="submit" class="w-full bg-gray-500 text-white text-sm py-1 rounded transition">Submit</button>
       </form>
     </div>
+
+
+    <!-- Ham Menue -->
+    <div class="fixed top-0 right-0 flex h-full w-64 bg-red-100 z-20 hidden" id="ham-menu">
+      <div class="relative h-full w-full">
+        <div class="flex flex-col gap-4 p-4">
+          <div class="flex flex-row gap-2 items-center" onclick="document.getElementById('ham-menu').classList.toggle('hidden');document.getElementById('hamBar').classList.toggle('hidden');">
+            <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000" class="mt-2">
+              <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+            </svg>
+          </div>
+
+          <div class="flex flex-row gap-2 items-center mt-4">
+            <div class="w-8 h-8 bg-white flex justify-center items-center rounded-full">
+              <img src="{% static 'imgs/user.png' %}" class="w-6 h-6 rounded-full object-cover" />
+            </div>
+            <span class="text-lg font-bold">User Profile</span>
+          </div>
+          <hr class="border-t-[0.025rem] border-black w-full" />
+          <div class="flex flex-row gap-2 items-center" onclick="window.location.href = '{% url 'dashboard' %}'">
+            <div class="w-8 h-8 bg-white flex justify-center items-center rounded-full">
+              <img src="{% static 'imgs/home.png' %}" class="w-6 h-6 rounded-full object-cover" />
+            </div>
+            <span class="text-lg font-bold">Home</span>
+          </div>
+          <hr class="border-t-[0.025rem] border-black w-full" />
+          <div class="flex flex-row gap-2 items-center">
+            <div class="w-8 h-8 bg-white flex justify-center items-center rounded-full">
+              <img src="{% static 'imgs/notification.png' %}" class="w-6 h-6 rounded-full object-cover" />
+            </div>
+            <span class="text-lg font-bold">Notifications</span>
+          </div>
+          <hr class="border-t-[0.025rem] border-black w-full" />
+          <div class="flex flex-row gap-2 items-center">
+            <div class="w-8 h-8 bg-white flex justify-center items-center rounded-full">
+              <img src="{% static 'imgs/chat.png' %}" class="w-6 h-6 rounded-full object-contain" />
+            </div>
+            <span class="text-lg font-bold">Chat With AI</span>
+          </div>
+          <hr class="border-t-[0.025rem] border-black w-full" />
+          <div class="flex flex-row gap-2 items-center">
+            <div class="w-8 h-8 bg-white flex justify-center items-center rounded-full">
+              <img src="{% static 'imgs/contact.png' %}" class="w-6 h-6 rounded-full object-cover" />
+            </div>
+            <span class="text-lg font-bold">Important Contacts</span>
+          </div>
+          <hr class="border-t-[0.025rem] border-black w-full" />
+          <div class="flex flex-row gap-2 items-center">
+            <div class="w-8 h-8 bg-white flex justify-center items-center rounded-full">
+              <img src="{% static 'imgs/about.png' %}" class="w-6 h-6 rounded-full object-cover" />
+            </div>
+            <span class="text-lg font-bold">About us</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ham Bar -->
+    <div id="hamBar" class="fixed  top-2.5 right-2.5 flex w-10 h-10 z-20 p-1" onclick="document.getElementById('ham-menu').classList.toggle('hidden'); this.classList.toggle('hidden')">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" class="w-full h-full" fill="#000">
+        <path d="M140-254.62v-59.99h680v59.99H140ZM140-450v-60h680v60H140Zm0-195.39v-59.99h680v59.99H140Z" />
+      </svg>
+    </div>
+
     <script>
       function fetchLocation() {
         if (navigator.geolocation) {
@@ -74,6 +131,8 @@
             (position) => {
               document.getElementById('location').textContent = "Location Enabled";
               console.log(`Lat: ${position.coords.latitude}, Lng: ${position.coords.longitude}`);
+
+              document.getElementById('userLocation').value = `${position.coords.latitude},${position.coords.longitude}`
 
               document.getElementById('submit_btn').classList.add('bg-red-500')
               document.getElementById('submit_btn').classList.remove('bg-gray-500')
