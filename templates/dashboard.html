@@ -45,11 +45,15 @@
           <hr class="border-t-[0.025rem] border-black w-full" />
           <span class="flex w-full justify-center items-center text-center text-black leading-tight">Donate Blood</span>
         </div>
-        <div class="bg-red-100 text-white w-28 rounded-lg flex flex-col justify-center items-center p-4 gap-1 cursor-pointer">
-          <img src="{% static 'imgs/bank.gif' %}" class="object-cover w-full rounded-lg bg-transparent mix-blend-multiply" />
-          <hr class="border-t-[0.025rem] border-black w-full" />
-          <span class="flex w-full justify-center items-center text-center text-black leading-tight">Find Blood Bank</span>
-        </div>
+        <form action="{% url '/banklist' %}" method="get">
+          <button>
+            <div class="bg-red-100 text-white w-28 rounded-lg flex flex-col justify-center items-center p-4 gap-1 cursor-pointer">
+              <img src="{% static 'imgs/bank.gif' %}" class="object-cover w-full rounded-lg bg-transparent mix-blend-multiply" />
+              <hr class="border-t-[0.025rem] border-black w-full" />
+              <span class="flex w-full justify-center items-center text-center text-black leading-tight">Find Blood Bank</span>
+            </div>
+          </button>
+        </form>
         <div class="bg-red-100 text-white w-28 rounded-lg flex flex-col justify-center items-center p-4 gap-1 cursor-pointer">
           <img src="{% static 'imgs/bloodtest.gif' %}" class="object-cover w-full rounded-lg bg-transparent mix-blend-multiply" />
           <hr class="border-t-[0.025rem] border-black w-full" />

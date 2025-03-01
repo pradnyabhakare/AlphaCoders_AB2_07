@@ -83,9 +83,28 @@ class SOSNotification(models.Model):
 
     def __str__(self):
         return f"SOS at {self.location}"  
-    
+
+class BloodBankDetails(models.Model):
+    id = models.CharField(max_length=20, primary_key=True)
+    name = models.CharField(max_length=255)
+    location = models.CharField(max_length=255)
+    contact = models.CharField(max_length=20)
+
+    a_positive = models.IntegerField(default=0)
+    b_positive = models.IntegerField(default=0)
+    o_positive = models.IntegerField(default=0)
+    ab_positive = models.IntegerField(default=0)
+    a_negative = models.IntegerField(default=0)
+    b_negative = models.IntegerField(default=0)
+    o_negative = models.IntegerField(default=0)
+    ab_negative = models.IntegerField(default=0)
+
+    def __str__(self):
+        return f"{self.name} - {self.location}"
+
 admin.site.register(UserInfo) 
 admin.site.register(PastDonation) 
 admin.site.register(Transaction) 
 admin.site.register(BloodBank) 
 admin.site.register(SOSNotification) 
+admin.site.register(BloodBankDetails) 
