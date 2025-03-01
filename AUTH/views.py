@@ -17,10 +17,9 @@ def login(request):
     if request.method == "POST":
         username = request.POST['username']
         password = request.POST['password']
-        
         try:
             user = UserAuthData.objects.get(username=username)
-            if check_password(password, user.password):  # Verify password
+            if user.password == password:
                 return render(request, 'dashboard.html', {'user': user})
             else:
                 return render(request, 'login.html', {'error': 'Invalid credentials'})
