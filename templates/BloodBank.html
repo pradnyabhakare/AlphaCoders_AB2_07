@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blood Bank</title>
+    <link rel="stylesheet" href="output.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+</head>
+<body class="bg-gray-100">
+
+    <!-- Sticky Navbar -->
+    <nav class="bg-red-500 text-white p-4 fixed top-0 w-full shadow-md flex justify-between items-center">
+        <h1 class="text-xl font-bold">Blood Bank</h1>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="mt-20 max-w-6xl mx-auto p-6 bg-white rounded-lg shadow-md">
+        <h2 class="text-2xl font-bold text-red-500 mb-4">Blood Stock Availability</h2>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <div class="p-4 bg-gray-200 text-center rounded-md">
+                <p class="text-xl font-bold text-red-500">A+</p>
+                <p class="text-gray-900" id="stock-Ap">Loading...</p>
+            </div>
+            <div class="p-4 bg-gray-200 text-center rounded-md">
+                <p class="text-xl font-bold text-red-500">B+</p>
+                <p class="text-gray-900" id="stock-Bp">Loading...</p>
+            </div>
+            <div class="p-4 bg-gray-200 text-center rounded-md">
+                <p class="text-xl font-bold text-red-500">O+</p>
+                <p class="text-gray-900" id="stock-Op">Loading...</p>
+            </div>
+            <div class="p-4 bg-gray-200 text-center rounded-md">
+                <p class="text-xl font-bold text-red-500">AB+</p>
+                <p class="text-gray-900" id="stock-ABp">Loading...</p>
+            </div>
+        </div>
+
+        <h3 class="text-xl font-bold text-red-500 mt-6">Blood Bank Information</h3>
+        <p class="text-gray-700 font-semibold">ID: <span class="text-gray-900" id="bank-id">Loading...</span></p>
+        <p class="text-gray-700 font-semibold">Name: <span class="text-gray-900" id="bank-name">Loading...</span></p>
+        <p class="text-gray-700 font-semibold">Contact: <span class="text-gray-900" id="bank-contact">Loading...</span></p>
+
+        <h3 class="text-xl font-bold text-red-500 mt-6">Blood Bank Location</h3>
+        <div id="map" class="w-full h-64 mt-2"></div>
+
+        <h3 class="text-xl font-bold text-red-500 mt-6">Patient Requests</h3>
+        <div id="requests-container" class="space-y-4 mt-4">
+            <!-- Requests will be inserted here dynamically -->
+        </div>
+    </div>
+
+    <script type="module">
+        import { bloodBank } from './data.js'; // Import blood bank data
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Update stock dynamically
+            document.getElementById("stock-Ap").textContent = `${bloodBank.availability.A_Positive} units`;
+            document.getElementById("stock-Bp").textContent = `${bloodBank.availability.B_Positive} units`;
+            document.getElementById("stock-Op").textContent = `${bloodBank.availability.O_Positive} units`;
+            document.getElementById("stock-ABp").textContent = `${bloodBank.availability.AB_Positive} units`;
+
+            // Update Blood Bank Information
+            document.getElementById("bank-id").textContent = bloodBank.id;
+            document.getElementById("bank-name").textContent = bloodBank.name;
+            document.getElementById("bank-contact").textContent = bloodBank.contact;
+
+            // Initialize map with geolocation
+            initLeafletMap(bloodBank.location.latitude, bloodBank.location.longitude, bloodBank.name);
+
+            // Display patient requests
+            displayRequests();
+        });
+
+        function initLeafletMap(lat, lon, name) {
+            const map = L.map('map').setView([lat, lon], 14);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+            addMarker(map, [lat, lon], name);
+        }
+
+        function addMarker(map, coords, popupText) {
+            L.marker(coords).addTo(map).bindPopup(popupText).openPopup();
+        }
+
+        function displayRequests() {
+            const container = document.getElementById("requests-container");
+            container.innerHTML = ""; // Clear previous data
+
+            if (bloodBank.requests.length === 0) {
+                container.innerHTML = `<p class="text-gray-700">No blood requests at the moment.</p>`;
+                return;
+            }
+
+            bloodBank.requests.forEach(request => {
+                const requestDiv = document.createElement("div");
+                requestDiv.classList.add("p-4", "bg-gray-100", "rounded-md");
+
+                requestDiv.innerHTML = `
+                    <p class="text-gray-700">
+                        Patient <span class="font-bold text-gray-900">${request.patientName}</span> 
+                        needs <span class="font-bold text-red-700">${request.bloodType}</span> blood urgently.
+                    </p>
+                    <p class="text-gray-700">Location: <span class="font-bold">${request.location}</span></p>
+                    <p class="text-gray-700">Contact: <span class="font-bold">${request.contact}</span></p>
+                    <button class="mt-4 w-1/2 item-center bg-red-500 text-white py-2 rounded-md font-bold">Accept Request</button>
+                `;
+
+                container.appendChild(requestDiv);
+            });
+        }
+    </script>
+
+</body>
+</html>
