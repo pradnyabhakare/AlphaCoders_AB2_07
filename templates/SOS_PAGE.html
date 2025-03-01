@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOS Emergency Form</title>
+    <link href="output.css" rel="stylesheet">
+</head>
+<body class="flex items-center justify-center min-h-screen bg-red-100">
+    <div class="p-6 bg-white rounded-lg w-80 text-left">
+        <div class="flex justify-between">
+            <h3 class="text-sm font-bold">SOS Emergency Form</h3>
+            <button id="sosButton" class="px-4 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-700 transition">SOS</button>
+        </div>
+
+        <form id="sosForm" class="mt-4 hidden">
+            <div class="mb-2">
+                <label class="block text-gray-700 text-sm">Name</label>
+                <input type="text" id="name" class="w-full border px-3 py-1 rounded text-sm" required>
+            </div>
+            <div class="mb-2">
+                <label class="block text-gray-700 text-sm">Address</label>
+                <input type="text" id="address" class="w-full border px-3 py-1 rounded text-sm" required>
+            </div>
+            <div class="mb-2">
+                <label class="block text-gray-700 text-sm">Phone Number</label>
+                <input type="tel" id="phone" class="w-full border px-3 py-1 rounded text-sm" required>
+            </div>
+            <div class="mb-2">
+                <label class="block text-gray-700 text-sm">Age</label>
+                <input type="number" id="age" class="w-full border px-3 py-1 rounded text-sm" required>
+            </div>
+            <div class="mb-2">
+                <label class="block text-gray-700 text-sm">Blood Group</label>
+                <select id="bloodGroup" class="w-full border px-3 py-1 rounded text-sm" required>
+                    <option value="A+">A+</option>
+                    <option value="A-">A-</option>
+                    <option value="B+">B+</option>
+                    <option value="B-">B-</option>
+                    <option value="O+">O+</option>
+                    <option value="O-">O-</option>
+                    <option value="AB+">AB+</option>
+                    <option value="AB-">AB-</option>
+                </select>
+            </div>
+            <div class="mb-2">
+                <label class="block text-gray-700 text-sm">Units of Blood Needed in ml</label>
+                <input type="number" id="bloodUnits" class="w-full border px-3 py-1 rounded text-sm" required>
+            </div>
+            <div class="mb-2">
+                <label class="block text-gray-700 text-sm">Range (km)</label>
+                <select id="range" class="w-full border px-3 py-1 rounded text-sm" required>
+                    <option value="">Select Range</option>
+                    <option value="5">5 km</option>
+                    <option value="10">10 km</option>
+                    <option value="20">20 km</option>
+                    <option value="50">50 km</option>
+                </select>
+            </div>
+            <div class="mb-2">
+                <label class="block text-gray-700 text-sm">Live Location</label>
+                <p id="location" class="text-sm text-gray-500">Fetching...</p>
+            </div>
+            <button type="submit" class="w-full bg-red-500 text-white text-sm py-1 rounded hover:bg-red-700 transition">Submit</button>
+        </form>
+        
+        <h3 class="mt-4 text-sm font-bold">Available Blood Donors</h3>
+        <ul id="donors" class="text-sm text-gray-700"></ul>
+    </div>
+    <script>
+        document.getElementById('sosButton').addEventListener('click', function() {
+            let sosForm = document.getElementById('sosForm');
+            let button = document.getElementById('sosButton');
+            sosForm.classList.toggle('hidden');
+            button.textContent = sosForm.classList.contains('hidden') ? 'SOS' : 'Back';
+        });
+
+        document.getElementById('sosForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            alert('SOS request submitted!');
+        });
+         function fetchLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    document.getElementById('location').textContent = `Lat: ${position.coords.latitude}, Lng: ${position.coords.longitude}`;
+                }, () => {
+                    document.getElementById('location').textContent = "Location access denied.";
+                });
+            } else {
+                document.getElementById('location').textContent = "Geolocation not supported.";
+            }
+        }
+        fetchLocation();
+        const donorsData = {
+            "5": ["John Doe - A+ (5km)"],
+            "10": ["Jane Smith - O- (10km)"],
+            "20": ["Emily Johnson - B+ (20km)"],
+            "50": ["Michael Brown - AB- (50km)"] 
+        };
+        document.getElementById('range').addEventListener('change', function() 
+        {
+            const selectedRange = this.value;
+            const donorsList = document.getElementById('donors');
+            donorsList.innerHTML = "";
+            
+            if (selectedRange && donorsData[selectedRange]) {
+                donorsData[selectedRange].forEach(donor => {
+                    let li = document.createElement('li');
+                    li.textContent = donor;
+                    donorsList.appendChild(li);
+                });
+            }
+        });
+        window.SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = new SpeechRecognition();
+        recognition.onresult = function(event) {
+            const command = event.results[0][0].transcript.toLowerCase();
+            if (command.includes("sos")) {
+                document.getElementById('sosButton').click();
+            }
+        };
+        recognition.start();
+    </script>
+</body>
+</html>
