@@ -20,7 +20,9 @@ def login(request):
         try:
             user = UserAuthData.objects.get(username=username)
             if user.password == password:
-                return render(request, 'dashboard.html', {'user': user})
+                request.session['auth_status'] = True
+                request.session['username'] = user.username
+                return redirect('/user')
             else:
                 return render(request, 'login.html', {'error': 'Invalid credentials'})
         except UserAuthData.DoesNotExist:

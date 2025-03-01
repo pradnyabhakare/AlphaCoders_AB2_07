@@ -1,5 +1,5 @@
 export const bloodBank = {
-    id: BB_1001,
+    id: "BB_1001",
     name: "City Blood Bank",
     contact: "+91 9876543210",
     location: {

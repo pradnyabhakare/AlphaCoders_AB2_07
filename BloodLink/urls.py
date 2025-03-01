@@ -20,4 +20,5 @@ from . import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('AUTH.urls'), name="Authentication App"),
+    path('user', include('MYUSER.urls')),
 ]
