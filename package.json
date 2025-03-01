@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build" : "npx tailwindcss -i ./templates/static/css/input.css -o ./templates/static/css/output.css --watch"
+    "build" : "npx tailwindcss -i ./templates/static/css/input.css -o ./templates/static/css/output.css --watch",
+    "ngrok" : "ngrok http --url=special-tuna-previously.ngrok-free.app 8000"
   },
   "keywords": [],
   "author": "",

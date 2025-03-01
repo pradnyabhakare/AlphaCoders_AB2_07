@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SOS Notifications</title>
+    <link rel="stylesheet" href="{% static 'css/output.css' %}">
+
+</head>
+<body class="bg-gray-100 p-0 m-0">
+    <nav class="bg-red-500 text-white p-4 fixed top-0 w-full shadow-md flex justify-between items-center">
+        <h1 class="text-xl font-bold">SOS Notifications</h1>
+      </nav>
+    <div class="max-w-md mx-auto mt-16">
+        <div id="sosNotifications" class="space-y-4 p-5">
+            <!-- Notifications will be inserted here -->
+        </div>
+    </div>
+
+    <!-- Ham Menue -->
+    <div class="fixed top-0 right-0 flex h-full w-64 bg-red-100 z-20 hidden" id="ham-menu">
+        <div class="relative h-full w-full">
+          <div class="flex flex-col gap-4 p-4">
+            <div class="flex flex-row gap-2 items-center" onclick="document.getElementById('ham-menu').classList.toggle('hidden');document.getElementById('hamBar').classList.toggle('hidden');">
+              <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960" width="24px" fill="#000" class="mt-2">
+                <path d="m256-200-56-56 224-224-224-224 56-56 224 224 224-224 56 56-224 224 224 224-56 56-224-224-224 224Z" />
+              </svg>
+            </div>
+  
+            <div class="flex flex-row gap-2 items-center mt-4">
+              <div class="w-8 h-8 bg-white flex justify-center items-center rounded-full">
+                <img src="{% static 'imgs/user.png' %}" class="w-6 h-6 rounded-full object-cover" />
+              </div>
+              <span class="text-lg font-bold">User Profile</span>
+            </div>
+            <hr class="border-t-[0.025rem] border-black w-full" />
+            <div class="flex flex-row gap-2 items-center" onclick="window.location.href = '{% url 'dashboard' %}'">
+              <div class="w-8 h-8 bg-white flex justify-center items-center rounded-full">
+                <img src="{% static 'imgs/home.png' %}" class="w-6 h-6 rounded-full object-cover" />
+              </div>
+              <span class="text-lg font-bold">Home</span>
+            </div>
+            <hr class="border-t-[0.025rem] border-black w-full" />
+            <div class="flex flex-row gap-2 items-center">
+              <div class="w-8 h-8 bg-white flex justify-center items-center rounded-full">
+                <img src="{% static 'imgs/notification.png' %}" class="w-6 h-6 rounded-full object-cover" />
+              </div>
+              <span class="text-lg font-bold">Notifications</span>
+            </div>
+            <hr class="border-t-[0.025rem] border-black w-full" />
+            <div class="flex flex-row gap-2 items-center">
+              <div class="w-8 h-8 bg-white flex justify-center items-center rounded-full">
+                <img src="{% static 'imgs/chat.png' %}" class="w-6 h-6 rounded-full object-contain" />
+              </div>
+              <span class="text-lg font-bold">Chat With AI</span>
+            </div>
+            <hr class="border-t-[0.025rem] border-black w-full" />
+            <div class="flex flex-row gap-2 items-center">
+              <div class="w-8 h-8 bg-white flex justify-center items-center rounded-full">
+                <img src="{% static 'imgs/contact.png' %}" class="w-6 h-6 rounded-full object-cover" />
+              </div>
+              <span class="text-lg font-bold">Important Contacts</span>
+            </div>
+            <hr class="border-t-[0.025rem] border-black w-full" />
+            <div class="flex flex-row gap-2 items-center">
+              <div class="w-8 h-8 bg-white flex justify-center items-center rounded-full">
+                <img src="{% static 'imgs/about.png' %}" class="w-6 h-6 rounded-full object-cover" />
+              </div>
+              <span class="text-lg font-bold">About us</span>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Ham Bar -->
+      <div id="hamBar" class="fixed top-2.5 right-2.5 flex w-10 h-10 z-20 p-1" onclick="document.getElementById('ham-menu').classList.toggle('hidden'); this.classList.toggle('hidden')">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" class="w-full h-full" fill="#fff">
+          <path d="M140-254.62v-59.99h680v59.99H140ZM140-450v-60h680v60H140Zm0-195.39v-59.99h680v59.99H140Z" />
+        </svg>
+      </div>
+    
+    <script>
+        async function fetchSOSNotifications() {
+            try {
+                const response = await fetch('http://127.0.0.1:8000/user/api/sos-notifications/');
+                const data = await response.json();
+                const notificationsContainer = document.getElementById('sosNotifications');
+                notificationsContainer.innerHTML = '';
+                
+                data.forEach(notification => {
+                    const [name, contact, units] = notification.info.split('|');
+                    const notificationCard = `<div class="bg-white p-4 rounded-lg shadow-md border-l-4 border-red-500">
+                        <p class="text-lg font-semibold">🚨 Emergency Blood Request</p>
+                        <p class="text-gray-700"><span class="font-semibold">Name:</span> ${name}</p>
+                        <p class="text-gray-700"><span class="font-semibold">Contact:</span> <a href="tel:${contact}" class="text-blue-600">${contact}</a></p>
+                        <p class="text-gray-700"><span class="font-semibold">Blood Type:</span> <span class="font-bold text-red-600">${notification.blood_type}</span></p>
+                        <p class="text-gray-700"><span class="font-semibold">Units Required:</span> ${units} ml</p>
+                        <p class="text-gray-700"><span class="font-semibold">Location:</span> 📍 ${notification.location}</p>
+                    </div>`;
+                    notificationsContainer.innerHTML += notificationCard;
+                });
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        }
+        
+        fetchSOSNotifications();
+    </script>
+</body>
+</html>

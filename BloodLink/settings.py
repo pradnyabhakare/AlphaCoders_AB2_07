@@ -26,7 +26,10 @@ SECRET_KEY = 'django-insecure-u2w(52udgttl*#sxq@74a03#xhf7(0lov7=t_*^d%1s5kx!$#8
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://special-tuna-previously.ngrok-free.app/','*']
+CSRF_TRUSTED_ORIGINS = [
+    "https://special-tuna-previously.ngrok-free.app",  # Replace with your actual ngrok URL
+]
 
 
 # Application definition

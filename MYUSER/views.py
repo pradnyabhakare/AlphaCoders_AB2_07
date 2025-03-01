@@ -133,7 +133,22 @@ def banklist(request):
 def navigation(request):
     if not request.session.get('auth_status'):
         return redirect('/')
-    return render(request, 'navigation.html')    
+    return render(request, 'navigation.html')   
+ 
+def notification(request):
+    if not request.session.get('auth_status'):
+        return redirect('/')
+    return render(request, 'notification.html')    
+
+def impcontact(request):
+    if not request.session.get('auth_status'):
+        return redirect('/')
+    return render(request, 'impcontact.html')    
+
+def aboutus(request):
+    if not request.session.get('auth_status'):
+        return redirect('/')
+    return render(request, 'aboutus.html')    
 
 def get_blood_banks(request):
     blood_banks = BloodBankDetails.objects.all()
@@ -156,7 +171,6 @@ def get_blood_banks(request):
                 "AB_Negative": bank.ab_negative
             }
         })
-    print(data)
     return JsonResponse(data, safe=False)
 
 def get_transactions(request):
@@ -179,4 +193,18 @@ def get_transactions(request):
             "location": [lat, lng]
         })
     
+    return JsonResponse(data, safe=False)
+
+def get_sos_notifications(request):
+    sos_notifications = SOSNotification.objects.all().order_by('-id')[:10]  # Fetch latest 10 notifications
+    
+    data = []
+    for sos in sos_notifications:
+        data.append({
+            "id": sos.id,
+            "location": sos.location,
+            "blood_type": sos.blood_type,
+            "info": sos.info
+        })
+
     return JsonResponse(data, safe=False)
