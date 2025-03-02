@@ -129,6 +129,11 @@ def bloodbanklist(request):
         return render(request, 'bloodbanklist.html')
     return redirect('/')
 
+def profile(request):
+    if not request.session.get('auth_status'):
+        return redirect('/')
+    return render(request, 'userprofile.html')
+
 def banklist(request):
     if not request.session.get('auth_status'):
         return redirect('/')
