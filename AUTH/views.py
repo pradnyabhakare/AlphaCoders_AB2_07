@@ -17,6 +17,9 @@ def login(request):
     if request.method == "POST":
         username = request.POST['username']
         password = request.POST['password']
+        if username[0:3] == 'bb_':
+            return redirect('/bloodbank')
+            # return render(request, 'BloodBank.html')
         try:
             user = UserAuthData.objects.get(username=username)
             if user.password == password:

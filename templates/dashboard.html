@@ -10,7 +10,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link rel="stylesheet" href="{% static 'css/output.css' %}" />
     <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,200..800;1,200..800&display=swap" rel="stylesheet" />
-    <script src="https://cdn.onesignal.com/sdks/OneSignalSDK.js" async></script>
 
     <style>
       ::-webkit-scrollbar {
@@ -87,7 +86,7 @@
     </div>
 
     <!-- Ham Menue -->
-    <div class="absolute top-0 right-0 flex h-full w-64 bg-red-100 z-20 hidden" id="ham-menu">
+    <div class="absolute top-0 right-0 flex h-full w-64 bg-red-100 z-20 hidden cursor-pointer" id="ham-menu">
       <div class="relative h-full w-full">
         <div class="flex flex-col gap-4 p-4">
           <div class="flex flex-row gap-2 items-center" onclick="document.getElementById('ham-menu').classList.toggle('hidden');document.getElementById('hamBar').classList.toggle('hidden');">
@@ -137,6 +136,13 @@
             </div>
             <span class="text-lg font-bold">About us</span>
           </div>
+          <hr class="border-t-[0.025rem] border-black w-full" />
+          <div class="flex flex-row gap-2 items-center" onclick="window.location.href = '{% url 'logoutuser' %}'">
+            <div class="w-8 h-8 bg-white flex justify-center items-center rounded-full">
+              <img src="{% static 'imgs/logout.png' %}" class="w-6 h-6 rounded-full object-cover" />
+            </div>
+            <span class="text-lg font-bold">Logout</span>
+          </div>
         </div>
       </div>
     </div>
@@ -148,7 +154,6 @@
       </svg>
     </div>
 
-    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
 
     <script>
       ;(function () {

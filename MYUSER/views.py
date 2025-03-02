@@ -8,6 +8,10 @@ def dashboard(request):
         return render(request, 'dashboard.html')
     return redirect('/')
 
+def logoutuser(request):
+    request.session['auth_status'] = False
+    request.session['username'] = None
+    return redirect('/')
 
 
 def sos(request):

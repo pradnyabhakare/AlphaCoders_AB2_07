@@ -5,4 +5,5 @@ urlpatterns = [
     path('register/', register, name='register'),
     path('', login, name='login'),
     path('login/', login, name='login'),
+    path('BloodBank/', login, name='login'),
 ]
